@@ -17,48 +17,48 @@ class GetStartedScreen extends StatelessWidget {
     final scale = MediaQuery.sizeOf(context).width / _designWidth;
     return Scaffold(
       backgroundColor: AppColors.cream,
-      body: SafeArea(
-        bottom: false,
-        child: Stack(
-          clipBehavior: .hardEdge,
-          children: [
-            Positioned(
-              right: -20 * scale,
-              top: -40 * scale,
-              child: Image.asset(AssetRes.imgGetStartedMint, width: 180 * scale, fit: .contain),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Image.asset(AssetRes.imgGetStartedSplash, fit: .cover, alignment: .bottomCenter),
-            ),
+      body: Stack(
+        clipBehavior: .hardEdge,
+        children: [
+          Positioned(
+            right: -20 * scale,
+            top: -40 * scale,
+            child: Image.asset(AssetRes.imgGetStartedMint, width: 180 * scale, fit: .contain),
+          ),
+          Positioned(
+            left: -20,
+            right: 0,
+            bottom: -50,
+            child: Image.asset(AssetRes.imgGetStartedSplash, fit: .contain, alignment: .bottomCenter),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Image.asset(AssetRes.imgGetStartedKiwi, fit: .cover, alignment: .bottomCenter),
+          ),
+          Positioned(
+            left: 37 * scale,
+            bottom: 0,
+            child: Image.asset(AssetRes.imgGetStartedCocktail, height: 532 * scale, fit: .contain),
+          ),
 
-            Positioned(
-              left: 37 * scale,
-              bottom: 0,
-              child: Image.asset(AssetRes.imgGetStartedCocktail, height: 532 * scale, fit: .contain),
+          Padding(
+            padding: .fromLTRB(24 * scale, 54 * scale, 24 * scale, 0),
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Text(StringConst.itsTimeForA, style: AppTextStyles.getStartedHeadline),
+                Transform.translate(
+                  offset: Offset(0, -8 * scale),
+                  child: Text(StringConst.drink, style: AppTextStyles.freeStyleText),
+                ),
+                SizedBox(height: 12 * scale),
+                Text(StringConst.getStartedSubtitle, style: AppTextStyles.subtitle),
+                SizedBox(height: 24 * scale),
+                _buildGetStartedButton(context, scale),
+              ],
             ),
-
-            Padding(
-              padding: .fromLTRB(24 * scale, 34 * scale, 24 * scale, 0),
-              child: Column(
-                crossAxisAlignment: .start,
-                children: [
-                  Text(StringConst.itsTimeForA, style: AppTextStyles.getStartedHeadline),
-                  Transform.translate(
-                    offset: Offset(0, -8 * scale),
-                    child: Text(StringConst.drink, style: AppTextStyles.freeStyleText),
-                  ),
-                  SizedBox(height: 12 * scale),
-                  Text(StringConst.getStartedSubtitle, style: AppTextStyles.subtitle),
-                  SizedBox(height: 24 * scale),
-                  _buildGetStartedButton(context, scale),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
