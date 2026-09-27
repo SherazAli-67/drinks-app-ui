@@ -4,6 +4,7 @@ class AppColors {
   AppColors._();
 
   static const Color cream = Color(0xFFFEF9E4);
+  static const Color creamShadow = Color(0xFFEFEAD5);
   static const Color navy = Color(0xFF1E2742);
   static const Color pink = Color(0xFFFB7D8A);
   static const Color pinkMid = Color(0xFFFCBABA);

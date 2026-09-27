@@ -31,7 +31,7 @@ class AppTextStyles {
   static const TextStyle freeStyleText = TextStyle(
     fontSize: 70,
     fontFamily: StringConst.freeStyleFont,
-    height: 44 / 70,
+    height: 1,
     color: AppColors.scriptPink,
   );
 

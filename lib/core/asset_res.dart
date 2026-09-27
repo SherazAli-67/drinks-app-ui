@@ -2,9 +2,11 @@ class AssetRes {
   AssetRes._();
 
   // Get Started
-  static const String imgGetStartedCocktail = 'assets/images/img_get_started_cocktail.png';
+  static const String imgGetStartedCocktail = 'assets/images/welcome_page_drink.png';
   static const String imgGetStartedMint = 'assets/images/img_get_started_mint.png';
   static const String imgGetStartedSplash = 'assets/images/img_get_started_splash.png';
+  static const String imgGetStartedKiwi = 'assets/images/img_get_started_kiwi.png';
+  static const String icChevronRight = 'assets/icons/ic_chevron_right.svg';
 
   // Home chrome
   static const String imgDrinkoLogo = 'assets/images/img_drinko_logo.png';
