@@ -20,11 +20,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   static const _designWidth = 375.0;
   final _searchController = TextEditingController();
+  late final PageController _mixesController = PageController(viewportFraction: 0.72);
   String _query = '';
+  int _currentMixIndex = 0;
 
   @override
   void dispose() {
     _searchController.dispose();
+    _mixesController.dispose();
     super.dispose();
   }
 
@@ -131,7 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 hintStyle: AppTextStyles.searchHint,
                 contentPadding: .zero,
               ),
-              onChanged: (value) => setState(() => _query = value.trim().toLowerCase()),
+              onChanged: (value) => setState(() {
+                _query = value.trim().toLowerCase();
+                _currentMixIndex = 0;
+                if (_mixesController.hasClients) _mixesController.jumpToPage(0);
+              }),
             ),
           ),
           SvgPicture.asset(AssetRes.icSearch, width: 14 * scale, height: 14 * scale),
@@ -194,23 +201,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildRecentMixes(double scale) {
     final mixes = _recentMixes;
+    if (mixes.isEmpty) return const SizedBox.shrink();
     return SizedBox(
       height: 360 * scale,
-      child: ListView.separated(
-        scrollDirection: .horizontal,
-        padding: .symmetric(horizontal: 24 * scale),
+      child: PageView.builder(
+        controller: _mixesController,
         itemCount: mixes.length,
-        separatorBuilder: (_, _) => SizedBox(width: 18 * scale),
-        itemBuilder: (context, index) => _buildMixCard(mixes[index], scale, isPrimary: index == 0),
+        padEnds: false,
+        onPageChanged: (index) => setState(() => _currentMixIndex = index),
+        itemBuilder: (context, index) => Padding(
+          padding: .only(left: index == 0 ? 24 * scale : 8 * scale, right: 8 * scale),
+          child: Align(
+            alignment: .topLeft,
+            child: AnimatedScale(
+              scale: index == _currentMixIndex ? 1 : 0.92,
+              duration: const Duration(milliseconds: 220),
+              child: _buildMixCard(mixes[index], scale),
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildMixCard(DrinkModel drink, double scale, {required bool isPrimary}) {
-    final cardWidth = isPrimary ? 248.0 : 180.0;
-    final cardHeight = isPrimary ? 334.0 : 241.0;
-    final titleStyle = isPrimary ? AppTextStyles.mixCardTitle : AppTextStyles.mixCardTitleSmall;
-    final secondaryStyle = isPrimary ? AppTextStyles.mixCardTitleSecondary : AppTextStyles.mixCardTitleSmallSecondary;
+  Widget _buildMixCard(DrinkModel drink, double scale) {
+    const cardWidth = 248.0;
+    const cardHeight = 334.0;
     final nameParts = drink.name.split(' ');
     final firstLine = nameParts.first;
     final secondLine = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
@@ -256,59 +272,59 @@ class _HomeScreenState extends State<HomeScreen> {
                     Column(
                       crossAxisAlignment: .start,
                       children: [
-                        Text(firstLine, style: titleStyle),
-                        if (secondLine.isNotEmpty) Text(secondLine, style: secondaryStyle),
+                        Text(firstLine, style: AppTextStyles.mixCardTitle),
+                        if (secondLine.isNotEmpty) Text(secondLine, style: AppTextStyles.mixCardTitleSecondary),
                       ],
                     ),
-                   Column(
-                     children: [
-                       Row(
-                         spacing: 8 * scale,
-                         children: [
-                           SvgPicture.asset(AssetRes.icDrink, width: 28 * scale, height: 28 * scale),
-                           Text(drink.category, style: AppTextStyles.mixCardCategory),
-                         ],
-                       ),
-                       SizedBox(height: 8 * scale),
-                       Row(
-                         children: [
-                           Expanded(
-                             child: Row(
-                               spacing: 4 * scale,
-                               children: [
-                                 SvgPicture.asset(AssetRes.icClock, width: 22 * scale, height: 22 * scale),
-                                 Text('${drink.timeMinutes} ${StringConst.minSuffix}', style: AppTextStyles.mixCardMeta),
-                               ],
-                             ),
-                           ),
-                           Text(drink.difficulty, style: AppTextStyles.mixCardMeta),
-                         ],
-                       ),
-                       SizedBox(height: 10 * scale),
-                       Row(
-                         children: [
-                           Expanded(
-                             child: Row(
-                               spacing: 7 * scale,
-                               children: [
-                                 SvgPicture.asset(AssetRes.icHeart, width: 18 * scale, height: 16 * scale),
-                                 Text('${drink.likes}', style: AppTextStyles.mixCardMeta),
-                               ],
-                             ),
-                           ),
-                           _buildRatingBadge(drink.rating, scale),
-                         ],
-                       ),
-                     ],
-                   )
+                    Column(
+                      children: [
+                        Row(
+                          spacing: 8 * scale,
+                          children: [
+                            SvgPicture.asset(AssetRes.icDrink, width: 28 * scale, height: 28 * scale),
+                            Text(drink.category, style: AppTextStyles.mixCardCategory),
+                          ],
+                        ),
+                        SizedBox(height: 8 * scale),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Row(
+                                spacing: 4 * scale,
+                                children: [
+                                  SvgPicture.asset(AssetRes.icClock, width: 22 * scale, height: 22 * scale),
+                                  Text('${drink.timeMinutes} ${StringConst.minSuffix}', style: AppTextStyles.mixCardMeta),
+                                ],
+                              ),
+                            ),
+                            Text(drink.difficulty, style: AppTextStyles.mixCardMeta),
+                          ],
+                        ),
+                        SizedBox(height: 10 * scale),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Row(
+                                spacing: 7 * scale,
+                                children: [
+                                  SvgPicture.asset(AssetRes.icHeart, width: 18 * scale, height: 16 * scale),
+                                  Text('${drink.likes}', style: AppTextStyles.mixCardMeta),
+                                ],
+                              ),
+                            ),
+                            _buildRatingBadge(drink.rating, scale),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ),
             Positioned(
-              right: isPrimary ? -8 * scale : -4 * scale,
-              top: isPrimary ? -8 * scale : 8 * scale,
-              child:  Image.asset(drink.heroImage, fit: .cover, height: 250,),
+              right: -15 * scale,
+              top: -10 * scale,
+              child: Image.asset(drink.heroImage, fit: .cover, height: 250 * scale),
             ),
           ],
         ),
