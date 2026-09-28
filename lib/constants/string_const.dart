@@ -5,7 +5,7 @@ class StringConst {
   static const drink = 'Drink';
   static const getStartedSubtitle = 'The one-stop to find amazing drink mixes for any occassion.';
   static const getStarted = 'Get Started';
-  static const homePrompt = 'I want to learn...';
+  static const wantToLearnPrompt = 'I want to learn...';
   static const search = 'Search';
   static const categories = 'Categories';
   static const recentMixes = 'Recent Mixes';
