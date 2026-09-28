@@ -4,7 +4,7 @@ import 'package:drinks_app/presentation/screens/home_screen.dart';
 import 'package:go_router/go_router.dart';
 
 GoRouter router = GoRouter(
-  initialLocation: NamedRoutes.getStarted.routeName,
+  initialLocation: NamedRoutes.home.routeName,
   routes: [
     GoRoute(path: NamedRoutes.getStarted.routeName, builder: (ctx, state) => const GetStartedScreen()),
     GoRoute(path: NamedRoutes.home.routeName, builder: (ctx, state) => const HomeScreen()),

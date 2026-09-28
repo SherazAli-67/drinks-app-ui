@@ -13,4 +13,10 @@ class StringConst {
   static const mixesSuffix = 'mixes';
   static const logoO = 'o';
   static const minSuffix = 'min';
+  static const time = 'Time';
+  static const difficulty = 'Difficulty';
+  static const category = 'Category';
+  static const serves = 'Serves';
+  static const ingredients = 'Ingredients';
+  static const drinkNotFound = 'Drink not found';
 }

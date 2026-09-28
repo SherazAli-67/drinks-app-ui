@@ -83,7 +83,11 @@ class AppData {
       likes: 534,
       rating: 4.0,
       heroImage: AssetRes.imgDrinkBlueMoon,
-      ingredients: [],
+      ingredients: [
+        IngredientModel(name: 'Ice Cubes', quantity: '6', imageAsset: AssetRes.imgIngredientIce),
+        IngredientModel(name: 'Lemon Wedges', quantity: '2', imageAsset: AssetRes.imgIngredientLemonWedges),
+        IngredientModel(name: 'Club Soda', quantity: '90', unit: 'ml', imageAsset: AssetRes.imgIngredientClubSoda),
+      ],
     ),
     DrinkModel(
       id: 'whisky-tumbler',
@@ -98,7 +102,10 @@ class AppData {
       likes: 312,
       rating: 4.5,
       heroImage: AssetRes.imgDrinkWhiskyTumbler,
-      ingredients: [],
+      ingredients: [
+        IngredientModel(name: 'Ice Cubes', quantity: '3', imageAsset: AssetRes.imgIngredientIce),
+        IngredientModel(name: 'Sugar', quantity: '1', unit: 'tbsp', imageAsset: AssetRes.imgIngredientSugar),
+      ],
     ),
     DrinkModel(
       id: 'virgin-mojito',
@@ -120,6 +127,7 @@ class AppData {
   static List<DrinkModel> get recentMixes => [
         drinks[0],
         drinks[1],
+        drinks[2],
       ];
 
   static DrinkModel? drinkById(String id) {

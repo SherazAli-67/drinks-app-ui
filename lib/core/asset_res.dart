@@ -16,9 +16,11 @@ class AssetRes {
   static const String icDrink = 'assets/icons/ic_drink.svg';
   static const String icClock = 'assets/icons/ic_clock.svg';
   static const String icHeart = 'assets/icons/ic_heart.svg';
+  static const String icHeartOutline = 'assets/icons/ic_heart_outline.svg';
   static const String icStarFilled = 'assets/icons/ic_star_filled.svg';
   static const String icStarEmpty = 'assets/icons/ic_star_empty.svg';
   static const String icBack = 'assets/icons/ic_back.svg';
+  static const String icChevronPink = 'assets/icons/ic_chevron_pink.svg';
 
   // Categories
   static const String imgCategoryCocktails = 'assets/images/image_category_cocktails.png';
@@ -38,4 +40,5 @@ class AssetRes {
   static const String imgIngredientIce = 'assets/images/img_ingredient_ice.png';
   static const String imgIngredientSugar = 'assets/images/img_ingredient_sugar.png';
   static const String imgIngredientClubSoda = 'assets/images/img_ingredient_club_soda.png';
+  static const String icDetailWave = 'assets/images/ic_detail_wave.png';
 }

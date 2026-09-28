@@ -17,4 +17,5 @@ class AppColors {
   static const Color subtitle = Color(0x80010101);
   static const Color white = Color(0xFFFFFFFF);
   static const Color whiteHalf = Color(0x80FFFFFF);
+  static const Color strokeColor = Color(0xffFBE897);
 }
