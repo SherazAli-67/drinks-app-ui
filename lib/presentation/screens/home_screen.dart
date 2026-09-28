@@ -18,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const _designWidth = 375.0;
   final _searchController = TextEditingController();
   late final PageController _mixesController = PageController(viewportFraction: 0.72);
   String _query = '';
@@ -43,37 +42,36 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final scale = MediaQuery.sizeOf(context).width / _designWidth;
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: .only(bottom: 24 * scale),
+          padding: .only(bottom: 24),
           child: Column(
             crossAxisAlignment: .start,
             children: [
               Padding(
-                padding: .symmetric(horizontal: 24 * scale),
+                padding: .symmetric(horizontal: 24),
                 child: Column(
                   crossAxisAlignment: .start,
-                  spacing: 18 * scale,
+                  spacing: 18,
                   children: [
-                    _buildHeader(scale),
+                    _buildHeader(),
                     Text(StringConst.homePrompt, style: AppTextStyles.homePrompt),
-                    _buildSearchField(scale),
-                    _buildSectionHeader(title: StringConst.categories, scale: scale),
+                    _buildSearchField(),
+                    _buildSectionHeader(title: StringConst.categories),
                   ],
                 ),
               ),
-              SizedBox(height: 12 * scale),
-              _buildCategories(scale),
-              SizedBox(height: 20 * scale),
+              SizedBox(height: 12),
+              _buildCategories(),
+              SizedBox(height: 20),
               Padding(
-                padding: .symmetric(horizontal: 24 * scale),
-                child: _buildSectionHeader(title: StringConst.recentMixes, scale: scale),
+                padding: .symmetric(horizontal: 24),
+                child: _buildSectionHeader(title: StringConst.recentMixes),
               ),
-              SizedBox(height: 14 * scale),
-              _buildRecentMixes(scale),
+              SizedBox(height: 14),
+              _buildRecentMixes(),
             ],
           ),
         ),
@@ -81,42 +79,39 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHeader(double scale) {
+  Widget _buildHeader() {
     return Padding(
-      padding: .only(top: 8 * scale),
+      padding: .only(top: 8),
       child: Row(
         children: [
-          SvgPicture.asset(AssetRes.icDrawerMenu, width: 24 * scale, height: 24 * scale),
+          SvgPicture.asset(AssetRes.icDrawerMenu, width: 24, height: 24),
           const Spacer(),
           Row(
             mainAxisSize: .min,
             children: [
-              Image.asset(AssetRes.imgDrinkoLogo, height: 28 * scale, fit: .contain),
+              Image.asset(AssetRes.imgDrinkoLogo, height: 28, fit: .contain),
               Transform.rotate(
                 angle: 0.42,
-                child: Text(
-                  StringConst.logoO,
-                  style: TextStyle(fontSize: 22 * scale, color: AppColors.scriptPink, height: 1),
-                ),
+                child: Text(StringConst.logoO, style: TextStyle(fontSize: 22, color: AppColors.scriptPink, height: 1)),
               ),
             ],
           ),
           const Spacer(),
           ClipOval(
-            child: Image.asset(AssetRes.imgAvatar, width: 24 * scale, height: 24 * scale, fit: .cover),
+            child: Image.asset(AssetRes.imgAvatar, width: 24, height: 24, fit: .cover),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSearchField(double scale) {
+  Widget _buildSearchField() {
     return Container(
-      height: 35 * scale,
-      padding: .symmetric(horizontal: 12 * scale),
+      height: 35,
+      padding: .symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: .circular(8 * scale),
+        borderRadius: .circular(8),
         boxShadow: [
           BoxShadow(color: AppColors.navy.withValues(alpha: 0.08), offset: const Offset(2, 0), blurRadius: 15),
         ],
@@ -141,21 +136,21 @@ class _HomeScreenState extends State<HomeScreen> {
               }),
             ),
           ),
-          SvgPicture.asset(AssetRes.icSearch, width: 14 * scale, height: 14 * scale),
+          SvgPicture.asset(AssetRes.icSearch, width: 14, height: 14),
         ],
       ),
     );
   }
 
-  Widget _buildSectionHeader({required String title, required double scale}) {
+  Widget _buildSectionHeader({required String title}) {
     return Row(
       children: [
         Expanded(child: Text(title, style: AppTextStyles.sectionTitle)),
         Container(
           alignment: .center,
-          padding: .symmetric(horizontal: 6, ),
+          padding: .symmetric(horizontal: 6),
           decoration: BoxDecoration(
-            borderRadius: .circular(8 * scale),
+            borderRadius: .circular(8),
             border: .all(color: AppColors.pink.withValues(alpha: 0.25)),
             boxShadow: [
               BoxShadow(color: AppColors.pinkMid.withValues(alpha: 0.2), offset: const Offset(2, 4), blurRadius: 15),
@@ -167,56 +162,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCategories(double scale) {
+  Widget _buildCategories() {
     final categories = _categories;
     return SizedBox(
-      height: 112 * scale,
+      height: 112,
       child: ListView.separated(
         scrollDirection: .horizontal,
-        padding: .symmetric(horizontal: 24 * scale),
+        padding: .symmetric(horizontal: 24),
         itemCount: categories.length,
-        separatorBuilder: (_, _) => SizedBox(width: 12 * scale),
-        itemBuilder: (context, index) => _buildCategoryCard(categories[index], scale),
+        separatorBuilder: (_, _) => SizedBox(width: 12),
+        itemBuilder: (context, index) => _buildCategoryCard(categories[index]),
       ),
     );
   }
 
-  Widget _buildCategoryCard(CategoryModel category, double scale) {
+  Widget _buildCategoryCard(CategoryModel category) {
     return Container(
       padding: .symmetric(horizontal: 15, vertical: 9),
       decoration: BoxDecoration(
         color: AppColors.cream,
-        borderRadius: .circular(12 * scale),
+        borderRadius: .circular(12),
       ),
       child: Column(
         children: [
           Expanded(child: Image.asset(category.imageAsset, fit: .contain)),
           Text(category.name, style: AppTextStyles.categoryName.copyWith(height: 1.2), maxLines: 1, overflow: .ellipsis),
           Text('${category.mixCount} ${StringConst.mixesSuffix}', style: AppTextStyles.categoryCount.copyWith(height: 1.2)),
-          SizedBox(height: 6 * scale),
+          SizedBox(height: 6),
         ],
       ),
     );
   }
 
-  Widget _buildRecentMixes(double scale) {
+  Widget _buildRecentMixes() {
     final mixes = _recentMixes;
     if (mixes.isEmpty) return const SizedBox.shrink();
     return SizedBox(
-      height: 360 * scale,
+      height: 360,
       child: PageView.builder(
         controller: _mixesController,
         itemCount: mixes.length,
         padEnds: false,
         onPageChanged: (index) => setState(() => _currentMixIndex = index),
         itemBuilder: (context, index) => Padding(
-          padding: .only(left: index == 0 ? 24 * scale : 8 * scale, right: 8 * scale),
+          padding: .only(left: index == 0 ? 24 : 8, right: 8),
           child: Align(
             alignment: .topLeft,
             child: AnimatedScale(
               scale: index == _currentMixIndex ? 1 : 0.92,
               duration: const Duration(milliseconds: 220),
-              child: _buildMixCard(mixes[index], scale),
+              child: _buildMixCard(mixes[index]),
             ),
           ),
         ),
@@ -224,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildMixCard(DrinkModel drink, double scale) {
+  Widget _buildMixCard(DrinkModel drink) {
     const cardWidth = 248.0;
     const cardHeight = 334.0;
     final nameParts = drink.name.split(' ');
@@ -234,37 +229,37 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () => context.push('${NamedRoutes.drinkDetail.routeName}/${drink.id}'),
       child: SizedBox(
-        width: (cardWidth + 24) * scale,
-        height: (cardHeight + 26) * scale,
+        width: cardWidth + 24,
+        height: cardHeight + 26,
         child: Stack(
           clipBehavior: .none,
           children: [
             Positioned(
-              left: 46 * scale,
-              top: 130 * scale,
+              left: 46,
+              top: 130,
               child: Container(
-                width: (cardWidth - 88) * scale,
-                height: (cardHeight - 88) * scale,
-                decoration: BoxDecoration(color: AppColors.pinkLight, borderRadius: .circular(16 * scale)),
+                width: cardWidth - 88,
+                height: cardHeight - 88,
+                decoration: BoxDecoration(color: AppColors.pinkLight, borderRadius: .circular(16)),
               ),
             ),
             Positioned(
-              left: 23 * scale,
-              top: 67 * scale,
+              left: 23,
+              top: 67,
               child: Container(
-                width: (cardWidth - 44) * scale,
-                height: (cardHeight - 45) * scale,
-                decoration: BoxDecoration(color: AppColors.pinkMid, borderRadius: .circular(16 * scale)),
+                width: cardWidth - 44,
+                height: cardHeight - 45,
+                decoration: BoxDecoration(color: AppColors.pinkMid, borderRadius: .circular(16)),
               ),
             ),
             Positioned(
               left: 0,
               top: 0,
               child: Container(
-                width: cardWidth * scale,
-                height: cardHeight * scale,
-                decoration: BoxDecoration(color: AppColors.pink, borderRadius: .circular(16 * scale)),
-                padding: .fromLTRB(12 * scale, 20 * scale, 12 * scale, 16 * scale),
+                width: cardWidth,
+                height: cardHeight,
+                decoration: BoxDecoration(color: AppColors.pink, borderRadius: .circular(16)),
+                padding: .fromLTRB(12, 20, 12, 16),
                 child: Column(
                   crossAxisAlignment: .start,
                   mainAxisAlignment: .spaceAround,
@@ -279,20 +274,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     Column(
                       children: [
                         Row(
-                          spacing: 8 * scale,
+                          spacing: 8,
                           children: [
-                            SvgPicture.asset(AssetRes.icDrink, width: 28 * scale, height: 28 * scale),
+                            SvgPicture.asset(AssetRes.icDrink, width: 28, height: 28),
                             Text(drink.category, style: AppTextStyles.mixCardCategory),
                           ],
                         ),
-                        SizedBox(height: 8 * scale),
+                        SizedBox(height: 8),
                         Row(
                           children: [
                             Expanded(
                               child: Row(
-                                spacing: 4 * scale,
+                                spacing: 4,
                                 children: [
-                                  SvgPicture.asset(AssetRes.icClock, width: 22 * scale, height: 22 * scale),
+                                  SvgPicture.asset(AssetRes.icClock, width: 22, height: 22),
                                   Text('${drink.timeMinutes} ${StringConst.minSuffix}', style: AppTextStyles.mixCardMeta),
                                 ],
                               ),
@@ -300,19 +295,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             Text(drink.difficulty, style: AppTextStyles.mixCardMeta),
                           ],
                         ),
-                        SizedBox(height: 10 * scale),
+                        SizedBox(height: 10),
                         Row(
                           children: [
                             Expanded(
                               child: Row(
-                                spacing: 7 * scale,
+                                spacing: 7,
                                 children: [
-                                  SvgPicture.asset(AssetRes.icHeart, width: 18 * scale, height: 16 * scale),
+                                  SvgPicture.asset(AssetRes.icHeart, width: 18, height: 16),
                                   Text('${drink.likes}', style: AppTextStyles.mixCardMeta),
                                 ],
                               ),
                             ),
-                            _buildRatingBadge(drink.rating, scale),
+                            _buildRatingBadge(drink.rating),
                           ],
                         ),
                       ],
@@ -322,9 +317,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Positioned(
-              right: -15 * scale,
-              top: -10 * scale,
-              child: Image.asset(drink.heroImage, fit: .cover, height: 250 * scale),
+              right: -15,
+              top: -10,
+              child: Image.asset(drink.heroImage, fit: .cover, height: 250),
             ),
           ],
         ),
@@ -332,22 +327,22 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildRatingBadge(double rating, double scale) {
+  Widget _buildRatingBadge(double rating) {
     final filled = rating.round().clamp(0, 4);
     return Container(
-      padding: .all(6 * scale),
+      padding: .all(6),
       decoration: BoxDecoration(
         color: AppColors.starBadge,
-        borderRadius: .circular(16 * scale),
+        borderRadius: .circular(16),
       ),
       child: Row(
         mainAxisSize: .min,
-        spacing: 2 * scale,
+        spacing: 2,
         children: List.generate(
           4,
           (index) => Opacity(
             opacity: index < filled ? 1 : 0.35,
-            child: SvgPicture.asset(AssetRes.icStarFilled, width: 16 * scale, height: 16 * scale),
+            child: SvgPicture.asset(AssetRes.icStarFilled, width: 16, height: 16),
           ),
         ),
       ),
