@@ -1,44 +1,30 @@
 import 'package:drinks_app/constants/string_const.dart';
 import 'package:drinks_app/core/app_colors.dart';
-import 'package:drinks_app/core/app_data.dart';
 import 'package:drinks_app/core/app_textstyles.dart';
 import 'package:drinks_app/core/asset_res.dart';
 import 'package:drinks_app/models/category_model.dart';
 import 'package:drinks_app/models/drink_model.dart';
+import 'package:drinks_app/providers/home_provider.dart';
 import 'package:drinks_app/routing/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => HomeProvider(),
+      child: const _HomeView(),
+    );
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final _searchController = TextEditingController();
-  late final PageController _mixesController = PageController(viewportFraction: 0.72);
-  String _query = '';
-  int _currentMixIndex = 0;
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _mixesController.dispose();
-    super.dispose();
-  }
-
-  List<CategoryModel> get _categories {
-    if (_query.isEmpty) return AppData.categories;
-    return AppData.categories.where((c) => c.name.toLowerCase().contains(_query)).toList();
-  }
-
-  List<DrinkModel> get _recentMixes {
-    if (_query.isEmpty) return AppData.recentMixes;
-    return AppData.recentMixes.where((d) => d.name.toLowerCase().contains(_query) || d.category.toLowerCase().contains(_query)).toList();
-  }
+class _HomeView extends StatelessWidget {
+  const _HomeView();
 
   @override
   Widget build(BuildContext context) {
@@ -58,20 +44,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     _buildHeader(),
                     Text(StringConst.homePrompt, style: AppTextStyles.homePrompt),
-                    _buildSearchField(),
+                    _buildSearchField(context),
                     _buildSectionHeader(title: StringConst.categories),
                   ],
                 ),
               ),
               SizedBox(height: 12),
-              _buildCategories(),
+              _buildCategories(context),
               SizedBox(height: 20),
               Padding(
                 padding: .symmetric(horizontal: 24),
                 child: _buildSectionHeader(title: StringConst.recentMixes),
               ),
               SizedBox(height: 14),
-              _buildRecentMixes(),
+              _buildRecentMixes(context),
             ],
           ),
         ),
@@ -105,7 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSearchField() {
+  Widget _buildSearchField(BuildContext context) {
+    final provider = context.read<HomeProvider>();
     return Container(
       height: 35,
       padding: .symmetric(horizontal: 12),
@@ -120,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: TextField(
-              controller: _searchController,
+              controller: provider.searchController,
               style: AppTextStyles.searchHint.copyWith(color: AppColors.navy),
               decoration: InputDecoration(
                 isDense: true,
@@ -129,11 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 hintStyle: AppTextStyles.searchHint,
                 contentPadding: .zero,
               ),
-              onChanged: (value) => setState(() {
-                _query = value.trim().toLowerCase();
-                _currentMixIndex = 0;
-                if (_mixesController.hasClients) _mixesController.jumpToPage(0);
-              }),
+              onChanged: provider.updateQuery,
             ),
           ),
           SvgPicture.asset(AssetRes.icSearch, width: 14, height: 14),
@@ -162,8 +145,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCategories() {
-    final categories = _categories;
+  Widget _buildCategories(BuildContext context) {
+    final categories = context.watch<HomeProvider>().categories;
     return SizedBox(
       height: 112,
       child: ListView.separated(
@@ -194,24 +177,25 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildRecentMixes() {
-    final mixes = _recentMixes;
+  Widget _buildRecentMixes(BuildContext context) {
+    final provider = context.watch<HomeProvider>();
+    final mixes = provider.recentMixes;
     if (mixes.isEmpty) return const SizedBox.shrink();
     return SizedBox(
       height: 360,
       child: PageView.builder(
-        controller: _mixesController,
+        controller: provider.mixesController,
         itemCount: mixes.length,
         padEnds: false,
-        onPageChanged: (index) => setState(() => _currentMixIndex = index),
+        onPageChanged: provider.setCurrentMixIndex,
         itemBuilder: (context, index) => Padding(
           padding: .only(left: index == 0 ? 24 : 8, right: 8),
           child: Align(
             alignment: .topLeft,
             child: AnimatedScale(
-              scale: index == _currentMixIndex ? 1 : 0.92,
+              scale: index == provider.currentMixIndex ? 1 : 0.92,
               duration: const Duration(milliseconds: 220),
-              child: _buildMixCard(mixes[index]),
+              child: _buildMixCard(context, mixes[index]),
             ),
           ),
         ),
@@ -219,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildMixCard(DrinkModel drink) {
+  Widget _buildMixCard(BuildContext context, DrinkModel drink) {
     const cardWidth = 248.0;
     const cardHeight = 334.0;
     final nameParts = drink.name.split(' ');
