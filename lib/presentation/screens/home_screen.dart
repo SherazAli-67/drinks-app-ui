@@ -16,18 +16,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => HomeProvider(),
-      child: const _HomeView(),
-    );
-  }
-}
-
-class _HomeView extends StatelessWidget {
-  const _HomeView();
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -64,6 +52,7 @@ class _HomeView extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _buildHeader() {
     return Padding(
@@ -324,7 +313,7 @@ class _HomeView extends StatelessWidget {
         spacing: 2,
         children: List.generate(
           4,
-          (index) => Opacity(
+              (index) => Opacity(
             opacity: index < filled ? 1 : 0.35,
             child: SvgPicture.asset(AssetRes.icStarFilled, width: 16, height: 16),
           ),

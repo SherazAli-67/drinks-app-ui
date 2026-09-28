@@ -10,20 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class DrinkDetailScreen extends StatelessWidget {
-  final String drinkId;
-  const DrinkDetailScreen({super.key, required this.drinkId});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => DrinkDetailProvider(drinkId),
-      child: const _DrinkDetailView(),
-    );
-  }
-}
-
-class _DrinkDetailView extends StatelessWidget {
-  const _DrinkDetailView();
+  const DrinkDetailScreen({super.key, });
 
   @override
   Widget build(BuildContext context) {
