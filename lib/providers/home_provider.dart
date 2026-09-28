@@ -10,6 +10,7 @@ class HomeProvider extends ChangeNotifier {
   String _query = '';
   int _currentMixIndex = 0;
 
+  String get query => _query;
   int get currentMixIndex => _currentMixIndex;
 
   List<CategoryModel> get categories {

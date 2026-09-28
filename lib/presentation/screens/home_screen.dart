@@ -11,75 +11,136 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  late final AnimationController _entranceController;
+  late final Animation<double> _headerOpacity;
+  late final Animation<Offset> _headerSlide;
+  late final Animation<double> _categoriesOpacity;
+  late final Animation<Offset> _categoriesSlide;
+  late final Animation<double> _mixesOpacity;
+  late final Animation<Offset> _mixesSlide;
+
+  @override
+  void initState() {
+    super.initState();
+    _entranceController = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+    _headerOpacity = _intervalOpacity(0.0, 0.55);
+    _headerSlide = _intervalSlide(0.0, 0.55, beginOffset: const Offset(0, -0.06));
+    _categoriesOpacity = _intervalOpacity(0.25, 0.75);
+    _categoriesSlide = _intervalSlide(0.25, 0.75, beginOffset: const Offset(0.08, 0));
+    _mixesOpacity = _intervalOpacity(0.45, 1.0);
+    _mixesSlide = _intervalSlide(0.45, 1.0, beginOffset: const Offset(0, 0.08));
+    _entranceController.forward();
+  }
+
+  Animation<double> _intervalOpacity(double begin, double end) {
+    return CurvedAnimation(parent: _entranceController, curve: Interval(begin, end, curve: Curves.easeOutCubic));
+  }
+
+  Animation<Offset> _intervalSlide(double begin, double end, {Offset beginOffset = const Offset(0, 0.08)}) {
+    return Tween(begin: beginOffset, end: Offset.zero).animate(
+      CurvedAnimation(parent: _entranceController, curve: Interval(begin, end, curve: Curves.easeOutCubic)),
+    );
+  }
+
+  @override
+  void dispose() {
+    _entranceController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: .only(bottom: 24),
-          child: Column(
-            crossAxisAlignment: .start,
-            children: [
-              Padding(
-                padding: .symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: .start,
-                  spacing: 18,
-                  children: [
-                    _buildHeader(),
-                    //wantToLearnPrompt, homePrompt
-                    Text(StringConst.wantToLearnPrompt, style: AppTextStyles.homePrompt,),
-                    //_buildSearchField
-                    _buildSearchField(context),
-                    _buildSectionHeader(title: StringConst.categories)
-                  ],
+        child: AnimatedBuilder(
+          animation: _entranceController,
+          builder: (context, _) => SingleChildScrollView(
+            padding: .only(bottom: 24),
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                FadeTransition(
+                  opacity: _headerOpacity,
+                  child: SlideTransition(
+                    position: _headerSlide,
+                    child: Padding(
+                      padding: .symmetric(horizontal: 24),
+                      child: Column(
+                        crossAxisAlignment: .start,
+                        spacing: 18,
+                        children: [
+                          _buildHeader(),
+                          Text(StringConst.wantToLearnPrompt, style: AppTextStyles.homePrompt),
+                          _buildSearchField(context),
+                          _buildSectionHeader(title: StringConst.categories),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              SizedBox(height: 12),
-              _buildCategories(context),
-              SizedBox(height: 20),
-              Padding(
-                padding: .symmetric(horizontal: 24),
-                child: _buildSectionHeader(title: StringConst.recentMixes),
-              ),
-              SizedBox(height: 14),
-              _buildRecentMixes(context),
-            ],
+                SizedBox(height: 12),
+                FadeTransition(
+                  opacity: _categoriesOpacity,
+                  child: SlideTransition(
+                    position: _categoriesSlide,
+                    child: _buildCategories(context),
+                  ),
+                ),
+                SizedBox(height: 20),
+                FadeTransition(
+                  opacity: _mixesOpacity,
+                  child: SlideTransition(
+                    position: _mixesSlide,
+                    child: Column(
+                      crossAxisAlignment: .start,
+                      children: [
+                        Padding(
+                          padding: .symmetric(horizontal: 24),
+                          child: _buildSectionHeader(title: StringConst.recentMixes),
+                        ),
+                        SizedBox(height: 14),
+                        _buildRecentMixes(context),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-
   Widget _buildHeader() {
     return Padding(
       padding: .only(top: 8),
       child: Row(
         children: [
-          // icDrawerMenu
-          SvgPicture.asset(AssetRes.icDrawerMenu, ),
+          SvgPicture.asset(AssetRes.icDrawerMenu),
           const Spacer(),
           Row(
             mainAxisSize: .min,
             children: [
-              //imgDrinkLogo, 38,
-              Image.asset(AssetRes.imgDrinkoLogo, height: 38,),
+              Image.asset(AssetRes.imgDrinkoLogo, height: 38),
               Transform.rotate(
                 angle: 0.42,
-                //logo0, fontSize:22, scriptPink
-                child: Text(StringConst.logoO, style: TextStyle(fontSize: 22, color: AppColors.scriptPink),)
+                child: Text(StringConst.logoO, style: TextStyle(fontSize: 22, color: AppColors.scriptPink)),
               ),
             ],
           ),
           const Spacer(),
           ClipOval(
-            //imgAvatar, width: 30
-            child: Image.asset(AssetRes.imgAvatar, height: 30,)
+            child: Image.asset(AssetRes.imgAvatar, height: 30),
           ),
         ],
       ),
@@ -123,7 +184,6 @@ class HomeScreen extends StatelessWidget {
   Widget _buildSectionHeader({required String title}) {
     return Row(
       children: [
-
         Expanded(child: Text(title, style: AppTextStyles.sectionTitle)),
         Container(
           alignment: .center,
@@ -142,15 +202,20 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCategories(BuildContext context) {
-    final categories = context.watch<HomeProvider>().categories;
-    return SizedBox(
-      height: 112,
-      child: ListView.separated(
-        scrollDirection: .horizontal,
-        padding: .symmetric(horizontal: 24),
-        itemCount: categories.length,
-        separatorBuilder: (_, _) => SizedBox(width: 12),
-        itemBuilder: (context, index) => _buildCategoryCard(categories[index]),
+    final provider = context.watch<HomeProvider>();
+    final categories = provider.categories;
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 220),
+      child: SizedBox(
+        key: ValueKey('categories-${provider.query}'),
+        height: 112,
+        child: ListView.separated(
+          scrollDirection: .horizontal,
+          padding: .symmetric(horizontal: 24),
+          itemCount: categories.length,
+          separatorBuilder: (_, _) => SizedBox(width: 12),
+          itemBuilder: (context, index) => _buildCategoryCard(categories[index]),
+        ),
       ),
     );
   }
@@ -164,12 +229,9 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          //category.imageAsset
           Expanded(child: Image.asset(category.imageAsset)),
-          //category.name, categoryName.height: 1.2
-          Text(category.name, style: AppTextStyles.categoryName.copyWith(height: 1.2),),
-          //, categoryCount.height: 1.2
-          Text("${category.mixCount} ${StringConst.mixesSuffix}", style: AppTextStyles.categoryCount.copyWith(height: 1.2),),
+          Text(category.name, style: AppTextStyles.categoryName.copyWith(height: 1.2)),
+          Text('${category.mixCount} ${StringConst.mixesSuffix}', style: AppTextStyles.categoryCount.copyWith(height: 1.2)),
           SizedBox(height: 6),
         ],
       ),
@@ -180,21 +242,25 @@ class HomeScreen extends StatelessWidget {
     final provider = context.watch<HomeProvider>();
     final mixes = provider.recentMixes;
     if (mixes.isEmpty) return const SizedBox.shrink();
-    return SizedBox(
-      height: 400,
-      child: PageView.builder(
-        controller: provider.mixesController,
-        itemCount: mixes.length,
-        padEnds: false,
-        onPageChanged: provider.setCurrentMixIndex,
-        itemBuilder: (context, index) => Padding(
-          padding: .only(left: index == 0 ? 24 : 8, right: 8),
-          child: Align(
-            alignment: .topLeft,
-            child: AnimatedScale(
-              scale: index == provider.currentMixIndex ? 1 : 0.92,
-              duration: const Duration(milliseconds: 220),
-              child: _buildMixCard(context, mixes[index]),
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 220),
+      child: SizedBox(
+        key: ValueKey('mixes-${provider.query}'),
+        height: 400,
+        child: PageView.builder(
+          controller: provider.mixesController,
+          itemCount: mixes.length,
+          padEnds: false,
+          onPageChanged: provider.setCurrentMixIndex,
+          itemBuilder: (context, index) => Padding(
+            padding: .only(left: index == 0 ? 24 : 8, right: 8),
+            child: Align(
+              alignment: .topLeft,
+              child: AnimatedScale(
+                scale: index == provider.currentMixIndex ? 1 : 0.92,
+                duration: const Duration(milliseconds: 220),
+                child: _buildMixCard(context, mixes[index]),
+              ),
             ),
           ),
         ),
@@ -250,11 +316,8 @@ class HomeScreen extends StatelessWidget {
                     Column(
                       crossAxisAlignment: .start,
                       children: [
-                        //firstLine, mixCardTitle
-                        Text(firstLine, style: AppTextStyles.mixCardTitle,),
-                        if (secondLine.isNotEmpty)
-                          //secondLine, mixCardTitleSecondary
-                          Text(secondLine, style: AppTextStyles.mixCardTitleSecondary,)
+                        Text(firstLine, style: AppTextStyles.mixCardTitle),
+                        if (secondLine.isNotEmpty) Text(secondLine, style: AppTextStyles.mixCardTitleSecondary),
                       ],
                     ),
                     Column(
@@ -262,10 +325,8 @@ class HomeScreen extends StatelessWidget {
                         Row(
                           spacing: 8,
                           children: [
-                            //icDrink,
                             SvgPicture.asset(AssetRes.icDrink),
-                            //drink.category, mixCardCategory
-                            Text(drink.category, style: AppTextStyles.mixCardCategory,)
+                            Text(drink.category, style: AppTextStyles.mixCardCategory),
                           ],
                         ),
                         SizedBox(height: 8),
@@ -275,15 +336,12 @@ class HomeScreen extends StatelessWidget {
                               child: Row(
                                 spacing: 4,
                                 children: [
-                                  //icClock
                                   SvgPicture.asset(AssetRes.icClock),
-                                  //, mixCardMeta
-                                  Text('${drink.timeMinutes} ${StringConst.minSuffix}', style: AppTextStyles.mixCardMeta,)
+                                  Text('${drink.timeMinutes} ${StringConst.minSuffix}', style: AppTextStyles.mixCardMeta),
                                 ],
                               ),
                             ),
-                            //drink.difficulty, mixCardMeta
-                            Text(drink.difficulty, style: AppTextStyles.mixCardMeta,)
+                            Text(drink.difficulty, style: AppTextStyles.mixCardMeta),
                           ],
                         ),
                         SizedBox(height: 10),
@@ -293,10 +351,8 @@ class HomeScreen extends StatelessWidget {
                               child: Row(
                                 spacing: 7,
                                 children: [
-                                  //icHeart
                                   SvgPicture.asset(AssetRes.icHeart),
-                                  //${drink.likes}, mixCardMeta
-                                  Text('${drink.likes}', style: AppTextStyles.mixCardMeta,)
+                                  Text('${drink.likes}', style: AppTextStyles.mixCardMeta),
                                 ],
                               ),
                             ),
@@ -312,8 +368,10 @@ class HomeScreen extends StatelessWidget {
             Positioned(
               right: -15,
               top: -10,
-              //drink.heroImage, height: 300
-              child: Image.asset(drink.heroImage, height: 300,)
+              child: Hero(
+                tag: 'drink-hero-${drink.id}',
+                child: Image.asset(drink.heroImage, height: 300),
+              ),
             ),
           ],
         ),
@@ -334,7 +392,7 @@ class HomeScreen extends StatelessWidget {
         spacing: 2,
         children: List.generate(
           4,
-              (index) => Opacity(
+          (index) => Opacity(
             opacity: index < filled ? 1 : 0.35,
             child: SvgPicture.asset(AssetRes.icStarFilled, width: 16, height: 16),
           ),
