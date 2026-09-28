@@ -32,10 +32,10 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     _buildHeader(),
                     //wantToLearnPrompt, homePrompt
-
+                    Text(StringConst.wantToLearnPrompt, style: AppTextStyles.homePrompt,),
                     //_buildSearchField
-
-                    //buildSectionHeader
+                    _buildSearchField(context),
+                    _buildSectionHeader(title: StringConst.categories)
                   ],
                 ),
               ),
@@ -44,8 +44,7 @@ class HomeScreen extends StatelessWidget {
               SizedBox(height: 20),
               Padding(
                 padding: .symmetric(horizontal: 24),
-
-                // child: _buildSectionHeader(title: StringConst.recentMixes),
+                child: _buildSectionHeader(title: StringConst.recentMixes),
               ),
               SizedBox(height: 14),
               _buildRecentMixes(context),
@@ -63,22 +62,24 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         children: [
           // icDrawerMenu
+          SvgPicture.asset(AssetRes.icDrawerMenu, ),
           const Spacer(),
           Row(
             mainAxisSize: .min,
             children: [
               //imgDrinkLogo, 38,
+              Image.asset(AssetRes.imgDrinkoLogo, height: 38,),
               Transform.rotate(
                 angle: 0.42,
                 //logo0, fontSize:22, scriptPink
-                child: const SizedBox()
+                child: Text(StringConst.logoO, style: TextStyle(fontSize: 22, color: AppColors.scriptPink),)
               ),
             ],
           ),
           const Spacer(),
           ClipOval(
             //imgAvatar, width: 30
-            child: const SizedBox()
+            child: Image.asset(AssetRes.imgAvatar, height: 30,)
           ),
         ],
       ),
@@ -158,17 +159,18 @@ class HomeScreen extends StatelessWidget {
     return Container(
       padding: .symmetric(horizontal: 15, vertical: 9),
       decoration: BoxDecoration(
-        // color: AppColors.cream,
+        color: AppColors.cream,
         borderRadius: .circular(12),
       ),
       child: Column(
         children: [
           //category.imageAsset
-          Expanded(child: const SizedBox()),
+          Expanded(child: Image.asset(category.imageAsset)),
           //category.name, categoryName.height: 1.2
-
-          //${category.mixCount} ${StringConst.mixesSuffix}, categoryCount.height: 1.2
-          // SizedBox(height: 6),
+          Text(category.name, style: AppTextStyles.categoryName.copyWith(height: 1.2),),
+          //, categoryCount.height: 1.2
+          Text("${category.mixCount} ${StringConst.mixesSuffix}", style: AppTextStyles.categoryCount.copyWith(height: 1.2),),
+          SizedBox(height: 6),
         ],
       ),
     );
@@ -221,7 +223,7 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 width: cardWidth - 88,
                 height: cardHeight - 88,
-                // decoration: BoxDecoration(color: AppColors.pinkLight, borderRadius: .circular(16)),
+                decoration: BoxDecoration(color: AppColors.pinkLight, borderRadius: .circular(16)),
               ),
             ),
             Positioned(
@@ -230,7 +232,7 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 width: cardWidth - 44,
                 height: cardHeight - 45,
-                // decoration: BoxDecoration(color: AppColors.pinkMid, borderRadius: .circular(16)),
+                decoration: BoxDecoration(color: AppColors.pinkMid, borderRadius: .circular(16)),
               ),
             ),
             Positioned(
@@ -239,7 +241,7 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 width: cardWidth,
                 height: cardHeight,
-                // decoration: BoxDecoration(color: AppColors.pink, borderRadius: .circular(16)),
+                decoration: BoxDecoration(color: AppColors.pink, borderRadius: .circular(16)),
                 padding: .fromLTRB(12, 20, 12, 16),
                 child: Column(
                   crossAxisAlignment: .start,
@@ -249,9 +251,10 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: .start,
                       children: [
                         //firstLine, mixCardTitle
+                        Text(firstLine, style: AppTextStyles.mixCardTitle,),
                         if (secondLine.isNotEmpty)
                           //secondLine, mixCardTitleSecondary
-                          const SizedBox(),
+                          Text(secondLine, style: AppTextStyles.mixCardTitleSecondary,)
                       ],
                     ),
                     Column(
@@ -260,8 +263,9 @@ class HomeScreen extends StatelessWidget {
                           spacing: 8,
                           children: [
                             //icDrink,
-
+                            SvgPicture.asset(AssetRes.icDrink),
                             //drink.category, mixCardCategory
+                            Text(drink.category, style: AppTextStyles.mixCardCategory,)
                           ],
                         ),
                         SizedBox(height: 8),
@@ -272,12 +276,14 @@ class HomeScreen extends StatelessWidget {
                                 spacing: 4,
                                 children: [
                                   //icClock
-
-                                  //${drink.timeMinutes} ${StringConst.minSuffix}, mixCardMeta
+                                  SvgPicture.asset(AssetRes.icClock),
+                                  //, mixCardMeta
+                                  Text('${drink.timeMinutes} ${StringConst.minSuffix}', style: AppTextStyles.mixCardMeta,)
                                 ],
                               ),
                             ),
                             //drink.difficulty, mixCardMeta
+                            Text(drink.difficulty, style: AppTextStyles.mixCardMeta,)
                           ],
                         ),
                         SizedBox(height: 10),
@@ -288,11 +294,13 @@ class HomeScreen extends StatelessWidget {
                                 spacing: 7,
                                 children: [
                                   //icHeart
+                                  SvgPicture.asset(AssetRes.icHeart),
                                   //${drink.likes}, mixCardMeta
+                                  Text('${drink.likes}', style: AppTextStyles.mixCardMeta,)
                                 ],
                               ),
                             ),
-                            // _buildRatingBadge(drink.rating),
+                            _buildRatingBadge(drink.rating),
                           ],
                         ),
                       ],
@@ -305,7 +313,7 @@ class HomeScreen extends StatelessWidget {
               right: -15,
               top: -10,
               //drink.heroImage, height: 300
-              child: const SizedBox()
+              child: Image.asset(drink.heroImage, height: 300,)
             ),
           ],
         ),
